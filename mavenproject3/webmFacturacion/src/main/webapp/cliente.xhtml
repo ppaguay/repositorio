@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+    <body>
+        <ui:composition template="/plantillas/plantilla.xhtml">
+            <ui:define name="contenido">
+            <h:form id="frmDatos">      
+                <p:growl id="msgs" showDetail="true" />
+                <p:dataTable id="dtClientes" var="cli" value="#{clienteController.lista}"
+                             selectionMode="single" selection="#{clienteController.seleccionado}" 
+                             rows="10" paginator="true"
+                             rowKey="#{cli.codigo}">
+                    <f:facet name="header">
+                        Lista de Clientes
+                    </f:facet>
+                    <p:column headerText="Codigo">
+                        <h:outputText value="#{cli.codigo}" />
+                    </p:column>
+                    <p:column headerText="Cedula">
+                        <h:outputText value="#{cli.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombres">
+                        <h:outputText value="#{cli.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellidos">
+                        <h:outputText value="#{cli.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Telefono">
+                        <h:outputText value="#{cli.telefono}" />
+                    </p:column> 
+                    <f:facet name="footer">
+                        <p:commandButton process="dtClientes" update=":frmDetalle:pnlDetalle" 
+                                         icon="ui-icon-search" 
+                                         value="Mostrar" oncomplete="PF('wdgDetalle').show()" />
+                        <p:commandButton process="dtClientes" update=":frmNuevo:pnlNuevo" 
+                                         icon="ui-icon-plusthick" 
+                                         value="Nuevo" oncomplete="PF('wdgNuevo').show()" />                        
+                        <p:commandButton process="dtClientes" update=":frmModificar:pnlModificar" 
+                                         icon="ui-icon-pencil" 
+                                         value="Modificar" oncomplete="PF('wdgModificar').show()" />                        
+                        <p:commandButton process="dtClientes" update=":frmEliminar:pnlEliminar" 
+                                         icon="ui-icon-closethick" 
+                                         value="Eliminar" oncomplete="PF('wdgEliminar').show()" />                        
+
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+            <h:form id="frmEliminar">  
+                <p:dialog header="Eliminar Cliente" widgetVar="wdgEliminar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlEliminar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Cliente" />
+                            </f:facet>
+                            <h:outputText value="Esta seguro de eliminar?" />
+                            <h:outputText value="#{clienteController.seleccionado.nombres} 
+                                         #{clienteController.seleccionado.apellidos}" />
+                            
+                            <p:commandButton value="Aceptar" action="#{clienteController.eliminar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgEliminar').hide()" 
+                                             type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmModificar">  
+                <p:dialog header="Modificar Cliente" widgetVar="wdgModificar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlModificar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Cliente" />
+                            </f:facet>
+                            <h:outputText value="Codigo:" />
+                            <p:inputText value="#{clienteController.seleccionado.codigo}" />
+
+                            <h:outputText value="Cedula:" />
+                            <p:inputText value="#{clienteController.seleccionado.cedula}" />
+
+                            <h:outputText value="Nombres:" />
+                            <p:inputText value="#{clienteController.seleccionado.nombres}" />
+
+                            <h:outputText value="Apellidos" />
+                            <p:inputText value="#{clienteController.seleccionado.apellidos}" />
+
+                            <h:outputText value="Telefono" />
+                            <p:inputText value="#{clienteController.seleccionado.telefono}" />
+
+                            <h:outputText value="Categoria:" />
+                            <p:selectOneMenu id="cmbCategoria" 
+                                             value="#{clienteController.seleccionado.categoria.codigo}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione una categoria" itemValue="" />
+                                <f:selectItems value="#{clienteController.listaCategorias}" 
+                                               var="cat" itemLabel="#{cat.descripcion}"
+                                               itemValue="#{cat.codigo}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Aceptar" action="#{clienteController.modificar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgModificar').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmNuevo">  
+                <p:dialog header="Nuevo Cliente" widgetVar="wdgNuevo" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlNuevo" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Cliente" />
+                            </f:facet>
+                            <h:outputText value="Codigo:" />
+                            <p:inputText value="#{clienteController.nuevo.codigo}" />
+
+                            <h:outputText value="Cedula:" />
+                            <p:inputText value="#{clienteController.nuevo.cedula}" />
+
+                            <h:outputText value="Nombres:" />
+                            <p:inputText value="#{clienteController.nuevo.nombres}" />
+
+                            <h:outputText value="Apellidos" />
+                            <p:inputText value="#{clienteController.nuevo.apellidos}" />
+
+                            <h:outputText value="Telefono" />
+                            <p:inputText value="#{clienteController.nuevo.telefono}" />
+
+                            <h:outputText value="Categoria:" />
+                            <p:selectOneMenu id="cmbCategoria" value="#{clienteController.codigocategoria}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione una categoria" itemValue="" />
+                                <f:selectItems value="#{clienteController.listaCategorias}" 
+                                               var="cat" itemLabel="#{cat.descripcion}"
+                                               itemValue="#{cat.codigo}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Aceptar" action="#{clienteController.insertar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgNuevo').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="frmDetalle">
+                <p:dialog header="Detalles del Cliente" widgetVar="wdgDetalle" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlDetalle" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Cliente" />
+                            </f:facet>
+
+                            <h:outputText value="Codigo:" />
+                            <h:outputText value="#{clienteController.seleccionado.codigo}" />
+
+                            <h:outputText value="Cedula:" />
+                            <h:outputText value="#{clienteController.seleccionado.cedula}" />
+
+                            <h:outputText value="Nombres:" />
+                            <h:outputText value="#{clienteController.seleccionado.nombres}" />
+
+                            <h:outputText value="Apellidos" />
+                            <h:outputText value="#{clienteController.seleccionado.apellidos}" />
+
+                            <h:outputText value="Telefono" />
+                            <h:outputText value="#{clienteController.seleccionado.telefono}" />                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

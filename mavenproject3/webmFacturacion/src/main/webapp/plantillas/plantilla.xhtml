@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      
+        <title>Sistema de facturacion Coop San Jose</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="encabezado">
+            <ui:insert name="encabezado">
+                <p:panel style="font-weight: bold; font-size: 1.2em;">
+                    <p:outputLabel value="Sistema de facturacion Coop San Jose" />
+                </p:panel>
+            </ui:insert>
+        </div>
+
+        <div id="top">
+            <ui:insert name="top">
+
+                <p:panel>
+                    <h:panelGrid columns="3" width="100%" style="margin-top: -1%; margin-bottom: -1%">
+                        <h:panelGrid columns="2" style="border: 0;" >
+                            <p:graphicImage value="/resources/imgs/banner.jpg" width="28px"/>
+                            <h:outputText value="Usuario"/>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" width="90%" style="text-align: right">                            
+                            <h:outputText value="Agencia"/>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" width="100%" style="text-align: right">                            
+                            <script>
+                                var meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                                var diasSemana = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
+                                var f = new Date();
+                                document.write(diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear());
+                            </script>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+            </ui:insert>
+        </div>
+
+        <div id="contentido" class="center_content">
+            <ui:insert name="contenido">
+                <p:panel>
+                    Contenido
+                </p:panel>
+            </ui:insert>
+        </div>
+
+        <div id="pie">
+            <ui:insert name="pie">
+                <p:panel>
+                    <h:form>
+                      
+                        <br></br>
+                        <h:outputText value="Copyrigth. Coop San Jose"/><br></br>
+                        <h:commandLink action="/creditos.xhtml">Creditos</h:commandLink>
+                    </h:form>
+                </p:panel>
+            </ui:insert>
+        </div>
+        <ui:insert name="dialogos" >
+
+        </ui:insert>
+    </h:body>
+
+</html>
+
