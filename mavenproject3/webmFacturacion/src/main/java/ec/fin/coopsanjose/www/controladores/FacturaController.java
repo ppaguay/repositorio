@@ -27,9 +27,11 @@ public class FacturaController {
 
     public FacturaController() {
         Cliente cliente= new Cliente();
+        Cliente cliente2= new Cliente();
         nuevo = new Factura();
         seleccionado = new Factura();
         seleccionado.setCliente(cliente);
+        nuevo.setCliente(cliente2);
 
         IClienteDao clientedao = new ClienteImpl();
         try {

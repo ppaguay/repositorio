@@ -23,9 +23,9 @@ public class FacturaImpl implements IFacturaDao {
         String sql = "INSERT INTO factura VALUES (?,?,?,?)";
         ArrayList<Parametro> lstParametro = new ArrayList<>();
         lstParametro.add(new Parametro(1, factura.getNumero()));
-        lstParametro.add(new Parametro(2,
-                new java.sql.Date(factura.getFecha().getTime())
-        ));
+        //lstParametro.add(new Parametro(2,
+         //       new java.sql.Date(factura.getFecha().getTime())
+       // ));
         lstParametro.add(new Parametro(3, factura.getTotal()));
         lstParametro.add(new Parametro(4, factura.getCliente().getCodigo()));
         try {
@@ -43,7 +43,7 @@ public class FacturaImpl implements IFacturaDao {
                 + "WHERE numero=?";
         ArrayList<Parametro> lstParametro = new ArrayList<>();
         lstParametro.add(new Parametro(1, factura.getNumero()));
-        lstParametro.add(new Parametro(2,factura.getFecha().getTime()));
+//        lstParametro.add(new Parametro(2,factura.getFecha().getTime()));
         lstParametro.add(new Parametro(3, factura.getTotal()));
         lstParametro.add(new Parametro(4, factura.getCliente().getCodigo()));
         lstParametro.add(new Parametro(5, factura.getNumero()));
@@ -83,7 +83,7 @@ public class FacturaImpl implements IFacturaDao {
             while (crs.next()) {
                 factura = new Factura();
                 factura.setNumero(crs.getInt(1));
-                factura.setFecha(crs.getDate(2));
+//                factura.setFecha(crs.getDate(2));
                 factura.setTotal(crs.getDouble(3));
                 IClienteDao clienteDao = new ClienteImpl();
                 Cliente cliente = clienteDao.obtener(crs.getInt(4));
@@ -108,7 +108,7 @@ public class FacturaImpl implements IFacturaDao {
             while (crs.next()) {
                 factura = new Factura();
                 factura.setNumero(crs.getInt(1));
-                factura.setFecha(crs.getDate(2));
+//                factura.setFecha(crs.getDate(2));
                 factura.setTotal(crs.getDouble(3));
                 IClienteDao clienteDao = new ClienteImpl();
                 Cliente cliente = clienteDao.obtener(crs.getInt(4));

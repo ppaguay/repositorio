@@ -5,22 +5,34 @@
  */
 package ec.fin.coopsanjose.www.rnegocio.entidades;
 
+import java.time.LocalDate;
 import java.util.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "factura")
 public class Factura {
+    @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private int numero;
-    private Date fecha;
+    private LocalDate fecha;
     private double total;
     private Cliente cliente;
 
     public Factura() {
     }
 
-    public Factura(int numero, Date fecha, double total, Cliente cliente) {
+    public Factura(int numero, LocalDate fecha, double total, Cliente cliente) {
         this.numero = numero;
         this.fecha = fecha;
         this.total = total;
         this.cliente = cliente;
     }
+
+   
 
     public Cliente getCliente() {
         return cliente;
@@ -38,13 +50,7 @@ public class Factura {
         this.numero = numero;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+    
 
     public double getTotal() {
         return total;
@@ -52,6 +58,14 @@ public class Factura {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
     
             
