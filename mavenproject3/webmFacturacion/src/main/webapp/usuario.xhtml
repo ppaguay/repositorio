@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <h:form id="frmDatos">      
+                <p:growl id="msgs" showDetail="true" />
+                <p:dataTable id="dtUsuarios" var="usu" value="#{usuarioController.lista}"                             
+                             selectionMode="single" selection="#{usuarioController.seleccionado}" 
+                             rows="10" paginator="true"
+                             rowKey="#{usu.codigo}">
+                    <f:facet name="header">
+                        Lista de Usuarios
+                    </f:facet>
+                    <p:column headerText="Codigo">
+                        <h:outputText value="#{usu.codigo}" />
+                    </p:column>
+                    <p:column headerText="Nombre completo">
+                        <h:outputText value="#{usu.nombrecompleto}" />
+                    </p:column>
+                    <p:column headerText="usuario">
+                        <h:outputText value="#{usu.usuario}" />
+                    </p:column>
+                    <p:column headerText="clave">
+                        <h:outputText value="#{usu.clave}" />
+                    </p:column>
+                    <p:column headerText="estado">
+                        <p:selectBooleanCheckbox value="#{usu.estado}" />
+                    </p:column>
+                    
+                    <f:facet name="footer">
+                        <p:commandButton process="dtUsuarios" update=":frmDetalle:pnlDetalle" 
+                                         icon="ui-icon-search" 
+                                         value="Mostrar" oncomplete="PF('wdgDetalle').show()" />
+                        <p:commandButton process="dtUsuarios" update=":frmNuevo:pnlNuevo" 
+                                         icon="ui-icon-plusthick" 
+                                         value="Nuevo" oncomplete="PF('wdgNuevo').show()" />                        
+                        <p:commandButton process="dtUsuarios" update=":frmModificar:pnlModificar" 
+                                         icon="ui-icon-pencil" 
+                                         value="Modificar" oncomplete="PF('wdgModificar').show()" />                        
+                        <p:commandButton process="dtUsuarios" update=":frmEliminar:pnlEliminar" 
+                                         icon="ui-icon-closethick" 
+                                         value="Eliminar" oncomplete="PF('wdgEliminar').show()" />                        
+
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+            <h:form id="frmEliminar">  
+                <p:dialog header="Eliminar Usuario" widgetVar="wdgEliminar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlEliminar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Usuario" />
+                            </f:facet>
+                            <h:outputText value="Esta seguro de eliminar?" />
+                            <h:outputText value="#{usuarioController.seleccionado.nombrecompleto}" />
+                            
+                            <p:commandButton value="Aceptar" action="#{usuarioController.eliminar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgEliminar').hide()" 
+                                             type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmModificar">  
+                <p:dialog header="Modificar Usuario" widgetVar="wdgModificar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlModificar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos de la Usuario" />
+                            </f:facet>
+                            <h:outputText value="Codigo:" />
+                            <p:inputText value="#{usuarioController.seleccionado.codigo}" />
+
+                            <h:outputText value="Nombre Completo" />
+                            <p:inputText value="#{usuarioController.seleccionado.nombrecompleto}" />
+
+                            <h:outputText value="Usuario" />
+                            <p:inputText value="#{usuarioController.seleccionado.usuario}" />
+                            <h:outputText value="Clave" />
+                            <p:inputText value="#{usuarioController.seleccionado.clave}" />
+                            <h:outputText value="Estado" />
+                            <p:selectBooleanCheckbox value="#{usuarioController.seleccionado.estado}" />
+                            
+                            <p:commandButton value="Aceptar" action="#{usuarioController.modificar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgModificar').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmNuevo">  
+                <p:dialog header="Nueva Usuario" widgetVar="wdgNuevo" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlNuevo" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos de la Usuario" />
+                            </f:facet>
+                            <h:outputText value="Codigo:" />
+                            <p:inputText value="#{usuarioController.nuevo.codigo}" />
+
+                           <h:outputText value="Nombre Completo" />
+                            <p:inputText value="#{usuarioController.nuevo.nombrecompleto}" />
+
+                            <h:outputText value="Usuario" />
+                            <p:inputText value="#{usuarioController.nuevo.usuario}" />
+                            <h:outputText value="Clave" />
+                            <p:inputText value="#{usuarioController.nuevo.clave}" />
+                            <h:outputText value="Estado" />
+                            <p:selectBooleanCheckbox value="#{usuarioController.nuevo.estado}" />
+                            
+                          
+                            <p:commandButton value="Aceptar" action="#{usuarioController.insertar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgNuevo').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="frmDetalle">
+                <p:dialog header="Detalles del Usuario" widgetVar="wdgDetalle" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlDetalle" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos de Usuario" />
+                            </f:facet>
+
+                            <h:outputText value="Codigo:" />
+                            <h:outputText value="#{usuarioController.seleccionado.codigo}" />
+
+                            <h:outputText value="Nombre Completo" />
+                            <p:inputText value="#{usuarioController.seleccionado.nombrecompleto}" />
+
+                            <h:outputText value="Usuario" />
+                            <h:outputText value="#{usuarioController.seleccionado.usuario}" />
+                            <h:outputText value="Clave" />
+                            <h:outputText value="#{usuarioController.seleccionado.clave}" />
+                            <h:outputText value="Estado" />
+                            <p:selectBooleanCheckbox value="#{usuarioController.seleccionado.estado}" />
+                            
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

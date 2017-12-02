@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+    <body>
+        <ui:composition template="/plantillas/plantilla.xhtml">
+            <ui:define name="contenido">
+            <h:form id="frmDatos">      
+                <p:growl id="msgs" showDetail="true" />
+                <p:dataTable id="dtFacturas" var="fact" value="#{facturaController.lista}"
+                             selectionMode="single" selection="#{facturaController.seleccionado}" 
+                             rows="10" paginator="true"
+                             rowKey="#{fact.codigo}">
+                    <f:facet name="header">
+                        Lista de Facturas
+                    </f:facet>
+                    <p:column headerText="Numero">
+                        <h:outputText value="#{fact.numero}" />
+                    </p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{fact.fecha}" />
+                    </p:column>
+                    <p:column headerText="Nombres">
+                        <h:outputText value="#{fact.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellidos">
+                        <h:outputText value="#{fact.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Telefono">
+                        <h:outputText value="#{fact.telefono}" />
+                    </p:column> 
+                    <f:facet name="footer">
+                        <p:commandButton process="dtFacturas" update=":frmDetalle:pnlDetalle" 
+                                         icon="ui-icon-search" 
+                                         value="Mostrar" oncomplete="PF('wdgDetalle').show()" />
+                        <p:commandButton process="dtFacturas" update=":frmNuevo:pnlNuevo" 
+                                         icon="ui-icon-plusthick" 
+                                         value="Nuevo" oncomplete="PF('wdgNuevo').show()" />                        
+                        <p:commandButton process="dtFacturas" update=":frmModificar:pnlModificar" 
+                                         icon="ui-icon-pencil" 
+                                         value="Modificar" oncomplete="PF('wdgModificar').show()" />                        
+                        <p:commandButton process="dtFacturas" update=":frmEliminar:pnlEliminar" 
+                                         icon="ui-icon-closethick" 
+                                         value="Eliminar" oncomplete="PF('wdgEliminar').show()" />                        
+
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+            <h:form id="frmEliminar">  
+                <p:dialog header="Eliminar Factura" widgetVar="wdgEliminar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlEliminar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Factura" />
+                            </f:facet>
+                            <h:outputText value="Esta seguro de eliminar?" />
+                            <h:outputText value="#{facturaController.seleccionado.nombres} 
+                                         #{facturaController.seleccionado.apellidos}" />
+                            
+                            <p:commandButton value="Aceptar" action="#{facturaController.eliminar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onfactck="PF('wdgEliminar').hide()" 
+                                             type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmModificar">  
+                <p:dialog header="Modificar Factura" widgetVar="wdgModificar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlModificar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Factura" />
+                            </f:facet>
+                            <h:outputText value="Numero" />
+                            <p:inputText value="#{facturaController.seleccionado.codigo}" />
+
+                            <h:outputText value="Cedula:" />
+                            <p:inputText value="#{facturaController.seleccionado.cedula}" />
+
+                            <h:outputText value="Nombres:" />
+                            <p:inputText value="#{facturaController.seleccionado.nombres}" />
+
+                            <h:outputText value="Apellidos" />
+                            <p:inputText value="#{facturaController.seleccionado.apellidos}" />
+
+                            <h:outputText value="Telefono" />
+                            <p:inputText value="#{facturaController.seleccionado.telefono}" />
+
+                            <h:outputText value="Categoria:" />
+                            <p:selectOneMenu id="cmbCategoria" 
+                                             value="#{facturaController.seleccionado.categoria.codigo}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione una categoria" itemValue="" />
+                                <f:selectItems value="#{facturaController.listaCategorias}" 
+                                               var="cat" itemLabel="#{cat.descripcion}"
+                                               itemValue="#{cat.codigo}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Aceptar" action="#{facturaController.modificar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onfactck="PF('wdgModificar').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmNuevo">  
+                <p:dialog header="Nuevo Factura" widgetVar="wdgNuevo" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlNuevo" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Factura" />
+                            </f:facet>
+                            <h:outputText value="Codigo:" />
+                            <p:inputText value="#{facturaController.nuevo.codigo}" />
+
+                            <h:outputText value="Cedula:" />
+                            <p:inputText value="#{facturaController.nuevo.cedula}" />
+
+                            <h:outputText value="Nombres:" />
+                            <p:inputText value="#{facturaController.nuevo.nombres}" />
+
+                            <h:outputText value="Apellidos" />
+                            <p:inputText value="#{facturaController.nuevo.apellidos}" />
+
+                            <h:outputText value="Telefono" />
+                            <p:inputText value="#{facturaController.nuevo.telefono}" />
+
+                            <h:outputText value="Categoria:" />
+                            <p:selectOneMenu id="cmbCategoria" value="#{facturaController.codigocategoria}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione una categoria" itemValue="" />
+                                <f:selectItems value="#{facturaController.listaCategorias}" 
+                                               var="cat" itemLabel="#{cat.descripcion}"
+                                               itemValue="#{cat.codigo}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Aceptar" action="#{facturaController.insertar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onfactck="PF('wdgNuevo').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="frmDetalle">
+                <p:dialog header="Detalles del Factura" widgetVar="wdgDetalle" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlDetalle" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Factura" />
+                            </f:facet>
+
+                            <h:outputText value="Codigo:" />
+                            <h:outputText value="#{facturaController.seleccionado.codigo}" />
+
+                            <h:outputText value="Cedula:" />
+                            <h:outputText value="#{facturaController.seleccionado.cedula}" />
+
+                            <h:outputText value="Nombres:" />
+                            <h:outputText value="#{facturaController.seleccionado.nombres}" />
+
+                            <h:outputText value="Apellidos" />
+                            <h:outputText value="#{facturaController.seleccionado.apellidos}" />
+
+                            <h:outputText value="Telefono" />
+                            <h:outputText value="#{facturaController.seleccionado.telefono}" />                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

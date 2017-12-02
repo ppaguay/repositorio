@@ -5,11 +5,18 @@
  */
 package ec.fin.coopsanjose.www.rnegocio.entidades;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author Paul
  */
+@Entity
+@Table(name="producto")
 public class Producto {
+    @Id
     private int codigo;
     private String descripcion;
     private double stock;
