@@ -17,18 +17,7 @@
             <ui:insert name="encabezado">
                 <p:panel style="font-weight: bold; font-size: 1.2em;">
                     <p:outputLabel value="Sistema de facturacion Coop San Jose" />
-                </p:panel>
-                <h:form>
-                    <p:menubar>
-                        <p:submenu label="Menu" icon="ui-icon-document">
-
-                            <p:menuitem value="Facturas" url="factura.xhTml" />
-                            <p:menuitem value="Producto" url="producto.xhtml" />
-                            <p:separator />
-                            <p:menuitem value="Cerrar" action="#{loginController.cerrarSesion}" />                        
-                        </p:submenu>
-                    </p:menubar>
-                </h:form>
+                </p:panel>               
             </ui:insert>
         </div>
 
@@ -36,15 +25,8 @@
             <ui:insert name="top">
 
                 <p:panel>
-                    <h:panelGrid columns="3" width="100%" style="margin-top: -1%; margin-bottom: -1%">
-                        <h:panelGrid columns="2" style="border: 0;" >
-                            <p:graphicImage value="/resources/imgs/banner.jpg" width="28px"/>
-                            <h:outputText value="Usuario: #{sesionUsuario.sesion.nombrecompleto}"/>
-                        </h:panelGrid>
-
-                        <h:panelGrid columns="1" width="90%" style="text-align: right">                            
-                            <h:outputText value="Agencia"/>
-                        </h:panelGrid>
+                    <h:panelGrid columns="1" width="100%" style="margin-top: -1%; margin-bottom: -1%">
+                     
 
                         <h:panelGrid columns="1" width="100%" style="text-align: right">                            
                             <script>

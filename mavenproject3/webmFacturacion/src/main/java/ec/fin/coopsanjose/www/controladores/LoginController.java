@@ -45,7 +45,6 @@ public class LoginController {
     public String cerrarSesion() {
         HttpSession session = Util.getSession();
         session.setAttribute("usuario", null);
-
         return "/index.xhtml?faces-redirect=true";
     }
 

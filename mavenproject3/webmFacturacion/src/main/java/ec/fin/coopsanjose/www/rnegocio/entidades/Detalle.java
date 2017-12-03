@@ -27,7 +27,7 @@ public class Detalle implements Serializable {
 private static final long serialVersionUID = 1L;
     @EmbeddedId
     private DetallePK detallePK;
-     @JoinColumn(name = "num_factura", referencedColumnName = "numero", insertable = false, updatable = false)
+    @JoinColumn(name = "num_factura", referencedColumnName = "numero", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Factura factura;
     @JoinColumn(name = "cod_producto", referencedColumnName = "codigo", insertable = false, updatable = false)

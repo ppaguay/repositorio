@@ -58,7 +58,7 @@ public class LoginCheckFilter extends AbstractFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
- 
+        
         if (session.isNew()) {
             doLogin(request, response, req);
             return;
