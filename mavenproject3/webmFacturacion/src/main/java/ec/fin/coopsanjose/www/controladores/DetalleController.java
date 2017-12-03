@@ -11,41 +11,35 @@ import java.util.*;
 import ec.fin.coopsanjose.www.rnegocio.entidades.*;
 import ec.fin.coopsanjose.www.rnegocio.interfaces.*;
 import ec.fin.coopsanjose.www.rnegocio.impljpa.*;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean
 @ViewScoped
-public class FacturaController {
+public class DetalleController {
 
-    private List<Factura> lista;
-    private Factura nuevo;
-    private Factura seleccionado;
-    private List<Cliente> listaClientes;
-    private int codigocliente;
-    private Date fechasel;
-    @ManagedProperty(value = "#{sesionUsuario}")
-    private SesionUsuario sesion;
-    private Usuario usuario;
-    @PostConstruct
-    public void init(){
-        usuario = sesion.getSesion();
-    }
+    private List<Detalle> lista;
+    private Detalle nuevo;
+    private Detalle seleccionado;
+    private List<Factura> listaFacturas;
+    private List<Producto> listaProductos;
+    private int codigofactura;
+    private int codigoproducto;
 
-    public FacturaController() {
-        Cliente cliente = new Cliente();
-        Cliente cliente2 = new Cliente();
-        nuevo = new Factura();
-        seleccionado = new Factura();
-        seleccionado.setCliente(cliente);
-        nuevo.setCliente(cliente2);
+    public DetalleController() {
+        Factura factura = new Factura();
+        Producto producto = new Producto();
+        nuevo = new Detalle();
+        seleccionado = new Detalle();
+        seleccionado.setFactura(factura);
+        seleccionado.setProducto(producto);
 
-        IClienteDao clientedao = new ClienteImpl();
+        IFacturaDao facturadao = new FacturaImpl();
+        IProductoDao productodao= new ProductoImpl();
         try {
-            listaClientes = clientedao.obtener();
+            listaFacturas = facturadao.obtener();
+            listaProductos = productodao.obtener();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -53,29 +47,24 @@ public class FacturaController {
     }
 
     private void cargardatos() {
-        IFacturaDao facturadao = new FacturaImpl();
+        IDetalleDao detalledao = new DetalleImpl();
         try {
-            lista = facturadao.obtener();
+            lista = detalledao.obtener();
         } catch (Exception e) {
-            System.out.println("Error al cargar los datos del factura!!" + e.getMessage());
+            System.out.println("Error al cargar los datos del detalle!!" + e.getMessage());
         }
     }
-
-    public void seleccionarFila() {
-        fechasel = java.sql.Date.valueOf(seleccionado.getFecha());
-    }
-
-    public void eliminar() {
+      public void eliminar() {
         FacesContext context = FacesContext.getCurrentInstance();
-        IFacturaDao facturadao = new FacturaImpl();
+        IDetalleDao detalledao = new DetalleImpl();
         try {
-            if (facturadao.eliminar(seleccionado)) {
+            if (detalledao.eliminar(seleccionado)) {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Exito", "Eliminado correctamente"));
                 cargardatos();
-                Cliente cat = new Cliente();
-                seleccionado = new Factura();
-                seleccionado.setCliente(cat);
+                Factura cat = new Factura();
+                seleccionado = new Detalle();
+                seleccionado.setFactura(cat);
 
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("PF('wdgEliminar').hide()");
@@ -92,16 +81,17 @@ public class FacturaController {
 
     public void modificar() {
         FacesContext context = FacesContext.getCurrentInstance();
-        IFacturaDao facturadao = new FacturaImpl();
+        IDetalleDao detalledao = new DetalleImpl();
         try {
-            seleccionado.setFecha(new java.sql.Date(fechasel.getTime()).toLocalDate());
-            if (facturadao.modificar(seleccionado)) {
+            if (detalledao.modificar(seleccionado)) {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Exito", "Modificado correctamente"));
                 cargardatos();
-                Cliente cat = new Cliente();
-                seleccionado = new Factura();
-                seleccionado.setCliente(cat);
+                Factura cat = new Factura();
+                Producto prod = new Producto();
+                seleccionado = new Detalle();
+                seleccionado.setFactura(cat);
+                seleccionado.setProducto(prod);
 
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("PF('wdgModificar').hide()");
@@ -118,17 +108,21 @@ public class FacturaController {
 
     public void insertar() {
         FacesContext context = FacesContext.getCurrentInstance();
-        IFacturaDao facturadao = new FacturaImpl();
+        IDetalleDao detalledao = new DetalleImpl();
         try {
-            IClienteDao clienteDao = new ClienteImpl();
-            Cliente cliente = clienteDao.obtener(codigocliente);
-            nuevo.setCliente(cliente);
-            nuevo.setFecha(new java.sql.Date(fechasel.getTime()).toLocalDate());
-            if (facturadao.insertar(nuevo)) {
+            IFacturaDao facturaDao = new FacturaImpl();
+            IProductoDao productoDao = new ProductoImpl();
+            Factura factura = facturaDao.obtener(codigofactura);
+            Producto producto = productoDao.obtener(codigoproducto);
+            nuevo.setFactura(factura);
+            nuevo.setProducto(producto);
+            DetallePK detallePk = new DetallePK(codigofactura, codigoproducto);
+            nuevo.setDetallePK(detallePk);
+            if (detalledao.insertar(nuevo)) {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Exito", "Ingresado correctamente"));
                 cargardatos();
-                nuevo = new Factura();
+                nuevo = new Detalle();
                 RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("PF('wdgNuevo').hide()");
             } else {
@@ -142,69 +136,60 @@ public class FacturaController {
         }
     }
 
-    public List<Factura> getLista() {
+    public List<Detalle> getLista() {
         return lista;
     }
 
-    public void setLista(List<Factura> lista) {
+    public void setLista(List<Detalle> lista) {
         this.lista = lista;
     }
 
-    public Factura getNuevo() {
+    public Detalle getNuevo() {
         return nuevo;
     }
 
-    public void setNuevo(Factura nuevo) {
+    public void setNuevo(Detalle nuevo) {
         this.nuevo = nuevo;
     }
 
-    public Factura getSeleccionado() {
+    public Detalle getSeleccionado() {
         return seleccionado;
     }
 
-    public void setSeleccionado(Factura seleccionado) {
+    public void setSeleccionado(Detalle seleccionado) {
         this.seleccionado = seleccionado;
     }
 
-    public List<Cliente> getListaClientes() {
-        return listaClientes;
+    public List<Factura> getListaFacturas() {
+        return listaFacturas;
     }
 
-    public void setListaClientes(List<Cliente> listaClientes) {
-        this.listaClientes = listaClientes;
+    public void setListaFacturas(List<Factura> listaFacturas) {
+        this.listaFacturas = listaFacturas;
     }
 
-    public int getCodigocliente() {
-        return codigocliente;
+    public int getCodigofactura() {
+        return codigofactura;
     }
 
-    public void setCodigocliente(int codigocliente) {
-        this.codigocliente = codigocliente;
+    public void setCodigofactura(int codigofactura) {
+        this.codigofactura = codigofactura;
     }
 
-    public Date getFechasel() {
-        return fechasel;
+    public List<Producto> getListaProductos() {
+        return listaProductos;
     }
 
-    public void setFechasel(Date fechasel) {
-        this.fechasel = fechasel;
+    public void setListaProductos(List<Producto> listaProductos) {
+        this.listaProductos = listaProductos;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public int getCodigoproducto() {
+        return codigoproducto;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setCodigoproducto(int codigoproducto) {
+        this.codigoproducto = codigoproducto;
     }
-
-    public SesionUsuario getSesion() {
-        return sesion;
-    }
-
-    public void setSesion(SesionUsuario sesion) {
-        this.sesion = sesion;
-    }
-    
 
 }

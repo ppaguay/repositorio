@@ -5,6 +5,7 @@
  */
 package ec.fin.coopsanjose.www.rnegocio.entidades;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import javax.persistence.Entity;
@@ -14,9 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 @Entity
 @Table(name = "factura")
-public class Factura {
+public class Factura implements Serializable{
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int numero;
     private LocalDate fecha;
     private double total;
@@ -68,5 +70,16 @@ public class Factura {
         this.fecha = fecha;
     }
     
-            
+          @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
+    }
+
+     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + numero;
+        return result;
+    }      
 }

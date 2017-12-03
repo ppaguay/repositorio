@@ -13,5 +13,6 @@ public interface IUsuarioDao {
     public boolean modificar(Usuario usuario) throws Exception;
     public boolean eliminar(Usuario usuario)throws Exception;
     public Usuario obtener(int codigo) throws Exception;
-    public List<Usuario> obtener() throws Exception;    
+    public List<Usuario> obtener() throws Exception; 
+    public Usuario autenticar(String strusuario, String clave) throws Exception ;
 }

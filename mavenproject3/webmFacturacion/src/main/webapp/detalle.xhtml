@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+    <body>
+        <ui:composition template="/plantillas/plantilla.xhtml">
+            <ui:define name="contenido">
+            <h:form id="frmDatos">      
+                <p:growl id="msgs" showDetail="true" />
+                <p:dataTable id="dtDetalles" var="det" value="#{detalleController.lista}"
+                             selectionMode="single" selection="#{detalleController.seleccionado}" 
+                             rows="10" paginator="true"
+                             rowKey="#{det.factura.numero}#{det.producto.codigo}">
+                    <f:facet name="header">
+                        Lista de Detalles
+                    </f:facet>
+                    <p:column headerText="Factura">
+                        <h:outputText value="#{det.factura.numero}" />
+                    </p:column>
+                    <p:column headerText="Producto">
+                        <h:outputText value="#{det.producto.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Cantidad">
+                        <h:outputText value="#{det.cantidad}" />
+                    </p:column>
+                    <p:column headerText="Precio Unitario">
+                        <h:outputText value="#{det.precio_unitario}" />
+                    </p:column> 
+                    <f:facet name="footer">
+                        <p:commandButton process="dtDetalles" update=":frmDetalle:pnlDetalle" 
+                                         icon="ui-icon-search" 
+                                         value="Mostrar" oncomplete="PF('wdgDetalle').show()" />
+                        <p:commandButton process="dtDetalles" update=":frmNuevo:pnlNuevo" 
+                                         icon="ui-icon-plusthick" 
+                                         value="Nuevo" oncomplete="PF('wdgNuevo').show()" />                        
+                        <p:commandButton process="dtDetalles" update=":frmModificar:pnlModificar" 
+                                         icon="ui-icon-pencil" 
+                                         value="Modificar" oncomplete="PF('wdgModificar').show()" />                        
+                        <p:commandButton process="dtDetalles" update=":frmEliminar:pnlEliminar" 
+                                         icon="ui-icon-closethick" 
+                                         value="Eliminar" oncomplete="PF('wdgEliminar').show()" />                        
+
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+            <h:form id="frmEliminar">  
+                <p:dialog header="Eliminar Detalle" widgetVar="wdgEliminar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlEliminar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Detalle" />
+                            </f:facet>
+                            <h:outputText value="Esta seguro de eliminar?" />
+                            <h:outputText value="Factura: #{detalleController.seleccionado.factura.numero} 
+                                         - Producto: #{detalleController.seleccionado.producto.descripcion}" />
+                            
+                            <p:commandButton value="Aceptar" action="#{detalleController.eliminar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgEliminar').hide()" 
+                                             type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmModificar">  
+                <p:dialog header="Modificar Detalle" widgetVar="wdgModificar" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlModificar" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Detalle" />
+                            </f:facet>
+                            <h:outputText value="Factura:" />
+                            <p:selectOneMenu id="cmbFactura" 
+                                             value="#{detalleController.seleccionado.factura.numero}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione una factura" itemValue="" />
+                                <f:selectItems value="#{detalleController.listaFacturas}" 
+                                               var="fact" itemLabel="Numero: #{fact.numero} Cliente: #{fact.cliente.apellidos}"
+                                               itemValue="#{fact.numero}" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Producto:" />
+                            <p:selectOneMenu id="cmbProducto" 
+                                             value="#{detalleController.seleccionado.producto.codigo}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione el producto" itemValue="" />
+                                <f:selectItems value="#{detalleController.listaProductos}" 
+                                               var="prod" itemLabel=" #{prod.descripcion} "
+                                               itemValue="#{prod.codigo}" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Cantidad:" />
+                            <p:inputText value="#{detalleController.seleccionado.cantidad}" />
+
+                            <h:outputText value="Precio U:" />
+                            <p:inputText value="#{detalleController.seleccionado.precio_unitario}" />
+
+                            
+                            <p:commandButton value="Aceptar" action="#{detalleController.modificar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgModificar').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            <h:form id="frmNuevo">  
+                <p:dialog header="Nuevo Detalle" widgetVar="wdgNuevo" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlNuevo" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Detalle" />
+                            </f:facet>
+                           <h:outputText value="Factura:" />
+                            <p:selectOneMenu id="cmbFactura" 
+                                             value="#{detalleController.codigofactura}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione una factura" itemValue="" />
+                                <f:selectItems value="#{detalleController.listaFacturas}" 
+                                               var="fact" itemLabel="Numero: #{fact.numero} Cliente: #{fact.cliente.apellidos}"
+                                               itemValue="#{fact.numero}" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Producto:" />
+                            <p:selectOneMenu id="cmbProducto" 
+                                             value="#{detalleController.codigoproducto}" 
+                                              >
+                                <f:selectItem itemLabel="Seleccione el producto" itemValue="" />
+                                <f:selectItems value="#{detalleController.listaProductos}" 
+                                               var="prod" itemLabel=" #{prod.descripcion} "
+                                               itemValue="#{prod.codigo}" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Cantidad:" />
+                            <p:inputText value="#{detalleController.nuevo.cantidad}" />
+
+                            <h:outputText value="Precio U:" />
+                            <p:inputText value="#{detalleController.nuevo.precio_unitario}" />
+                            
+                            <p:commandButton value="Aceptar" action="#{detalleController.insertar()}"
+                                             update=":frmDatos"/>
+                            <p:commandButton value="Cancelar" onclick="PF('wdgNuevo').hide()" type="reset"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="frmDetalle">
+                <p:dialog header="Detalles del Detalle" widgetVar="wdgDetalle" modal="true" 
+                          showEffect="fade"  hideEffect="fade" resizable="false"  >
+                    <p:outputPanel id="pnlDetalle" style="text-align:center;">
+                        <p:panelGrid  columns="2" >
+                            <f:facet name="header">
+                                <p:outputLabel value="Datos del Detalle" />
+                            </f:facet>
+
+                            <h:outputText value="Número Factura:" />
+                            <h:outputText value="#{detalleController.seleccionado.factura.numero}" />
+
+                            <h:outputText value="Producto:" />
+                            <h:outputText value="#{detalleController.seleccionado.producto.descripcion}" />
+
+                            <h:outputText value="Cantidad:" />
+                            <h:outputText value="#{detalleController.seleccionado.cantidad}" />
+
+                            <h:outputText value="Precio U" />
+                            <h:outputText value="#{detalleController.seleccionado.precio_unitario}" />
+
+                            </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

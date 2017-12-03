@@ -13,18 +13,9 @@
                 <p:growl id="msgs" showDetail="true" />
                 <p:panel header="Ingrese sus credenciales del Sistema "
                      style="width: 450px; margin-top: 4%; margin-bottom: 4%">
-                    <h:panelGrid columns="2">
-                     Usuario:
-                     <p:inputText id="txtUsuario" value="#{loginController.strusuario}" required="true"
-                                  requiredMessage="Ingrese un usuario" />
-                     Clave:
-                     <p:inputText id="txtClave" value="#{loginController.clave}" required="true"
-                                  requiredMessage="Ingrese una clave"
-                                  type="password" />
-                     <p:commandButton id="btnAutenticar" value="Ingresar"
-                                      action="#{loginController.login()}" />
-                     <p:commandButton id="btnCancelar" value="Cancelar"
-                                      action="index" type="reset" />
+                    <h:panelGrid columns="1">
+                     Acceso Denegado!!!
+                    
                     </h:panelGrid>
                 </p:panel>                
             </h:form>

@@ -5,8 +5,9 @@
  */
 package ec.fin.coopsanjose.www.rnegocio.impljpa;
 
-import ec.fin.coopsanjose.www.rnegocio.entidades.Cliente;
-import ec.fin.coopsanjose.www.rnegocio.interfaces.IClienteDao;
+import ec.fin.coopsanjose.www.rnegocio.entidades.Detalle;
+import ec.fin.coopsanjose.www.rnegocio.interfaces.IDetalleDao;
+import ec.fin.coopsanjose.www.rnegocio.interfaces.IDetalleDao;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -14,22 +15,22 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-public class ClienteImpl implements IClienteDao {
+public class DetalleImpl implements IDetalleDao {
 
     private EntityManagerFactory emf;
     private EntityManager em;
 
-    public ClienteImpl() {
+    public DetalleImpl() {
         emf = Persistence.createEntityManagerFactory("facturacionPU");
         em = emf.createEntityManager();
     }
 
     @Override
-    public boolean insertar(Cliente cliente) throws Exception {
+    public boolean insertar(Detalle detalle) throws Exception {
         boolean resultado = false;
         try {
             em.getTransaction().begin();
-            em.persist(cliente);
+            em.persist(detalle);
             em.getTransaction().commit();
             resultado = true;
         } catch (Exception e) {
@@ -44,11 +45,11 @@ public class ClienteImpl implements IClienteDao {
     }
 
     @Override
-    public List<Cliente> obtener() throws Exception {
-        List<Cliente> lista = new ArrayList<>();
+    public List<Detalle> obtener() throws Exception {
+        List<Detalle> lista = new ArrayList<>();
         try {
-            Query query = em.createQuery("FROM Cliente c");
-            lista = (List<Cliente>) query.getResultList();
+            Query query = em.createQuery("FROM Detalle c");
+            lista = (List<Detalle>) query.getResultList();
         } catch (Exception e) {
             throw e;
         }
@@ -56,11 +57,11 @@ public class ClienteImpl implements IClienteDao {
     }
 
     @Override
-    public boolean modificar(Cliente cliente) throws Exception {
+    public boolean modificar(Detalle detalle) throws Exception {
         boolean resultado = false;
         try {
             em.getTransaction().begin();
-            em.merge(cliente);
+            em.merge(detalle);
             em.getTransaction().commit();
             resultado = true;
         } catch (Exception e) {
@@ -75,12 +76,12 @@ public class ClienteImpl implements IClienteDao {
     }
 
     @Override
-    public boolean eliminar(Cliente cliente) throws Exception {
+    public boolean eliminar(Detalle detalle) throws Exception {
         boolean resultado = false;
         try {
           em.getTransaction().begin();
-            Cliente cli = em.getReference(Cliente.class, 
-                    cliente.getCodigo());
+            Detalle cli = em.getReference(Detalle.class, 
+                    detalle.getDetallePK());
             em.remove(cli);  
             em.getTransaction().commit();
             resultado = true;
@@ -96,16 +97,17 @@ public class ClienteImpl implements IClienteDao {
     }
 
     @Override
-    public Cliente obtener(int codigo) throws Exception {
-        Cliente cliente = null;
+    public Detalle obtener(int numero, int cod_producto) throws Exception {
+        Detalle detalle = null;
         try {
-            Query query = em.createQuery("FROM Cliente c "
-                    + "WHERE c.codigo=?1");
-            query.setParameter(1, codigo);
-            cliente = (Cliente) query.getSingleResult();
+            Query query = em.createQuery("FROM Detalle c "
+                    + "WHERE c.num_factura=?1 and c.cod_producto=?2");
+            query.setParameter(1, numero);
+            query.setParameter(2, cod_producto);
+            detalle = (Detalle) query.getSingleResult();
         } catch (Exception e) {
             throw e;
         }
-        return cliente;
+        return detalle;
     }
 }

@@ -5,6 +5,8 @@
  */
 package ec.fin.coopsanjose.www.rnegocio.entidades;
 
+import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,8 +17,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="producto")
-public class Producto {
+public class Producto implements Serializable{
+    private static final long serialVersionUID = 1L;
     @Id
+     @Basic(optional = false)
     private int codigo;
     private String descripcion;
     private double stock;
@@ -63,5 +67,23 @@ public class Producto {
     public void setStock(double stock) {
         this.stock = stock;
     }
-    
+       @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += codigo;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Producto)) {
+            return false;
+        }
+        Producto other = (Producto) object;
+        if (this.codigo!=other.codigo) {
+            return false;
+        }
+        return true;
+    }
 }

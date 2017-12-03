@@ -101,6 +101,21 @@ public class UsuarioImpl implements IUsuarioDao {
         }
         return usuario;
     }
+    @Override
+    public Usuario autenticar(String strusuario, String clave) throws Exception {
+         Usuario usuario = null;
+        try {
+            Query query = em.createQuery("FROM Usuario c "
+                    + "WHERE c.usuario=?1 and c.clave=?2");
+            query.setParameter(1, strusuario);
+            query.setParameter(2, clave);
+            usuario = (Usuario) query.getSingleResult();
+        } catch (Exception e) {
+            throw e;
+        }
+        return usuario;
+    }
+    
 
     @Override
     public List<Usuario> obtener() throws Exception {

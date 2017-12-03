@@ -100,7 +100,7 @@ public class FacturaImpl implements IFacturaDao {
         Factura factura = null;
         try {
             Query query = em.createQuery("FROM Factura c "
-                    + "WHERE c.codigo=?");
+                    + "WHERE c.numero=?1");
             query.setParameter(1, codigo);
             factura = (Factura) query.getSingleResult();
         } catch (Exception e) {
